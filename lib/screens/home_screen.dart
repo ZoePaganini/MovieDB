@@ -14,7 +14,7 @@ class HomeScreen extends StatelessWidget {
           actions: [
             IconButton(
               onPressed: () {
-                showSearch(context: context, delegate: SearchMovies(moviesProvider.getPopularMovies(), moviesProvider.searchMovies()));
+                showSearch(context: context, delegate: SearchMovies(context: context));
               }, 
               icon: Icon(Icons.search_outlined))
           ],
@@ -27,10 +27,12 @@ class HomeScreen extends StatelessWidget {
               CardSwiper(movies: moviesProvider.onDisplayMovies),
 
               // Slider de pel·licules
-              MovieSlider(popularMovies: moviesProvider.popularMovies),
+              MovieSlider(movies: moviesProvider.popularMovies, category: 'Populars',),
+              Divider(),
               // Poodeu fer la prova d'afegir-ne uns quants, veureu com cada llista és independent
-              // MovieSlider(),
-              // MovieSlider(),
+              MovieSlider(movies: moviesProvider.topRatedMovies, category: 'Top Rated',),
+              Divider(),
+              MovieSlider(movies: moviesProvider.upcomingMovies, category: 'Upcoming',),
             ],
           ),
         )));

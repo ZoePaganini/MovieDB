@@ -14,12 +14,18 @@ class MoviesProvider extends ChangeNotifier {
 
   List<Movie> onDisplayMovies = [];
   List<Movie> popularMovies = [];
+  List<Movie> searchMovies = [];
+  List<Movie> topRatedMovies = [];
+  List<Movie> upcomingMovies = [];
+  List<Movie> similarMovies = [];
   Map<int, List<Cast>> casting = {};
 
   MoviesProvider() {
     print('Movies Provider inicialitzat');
     this.getOnDisplayMovies();
     this.getPopularMovies();
+    this.getTopRatedMovies();
+    this.getUpcomingMovies();
   }
 
   getOnDisplayMovies() async {
@@ -65,18 +71,59 @@ class MoviesProvider extends ChangeNotifier {
     return creditsResponse.cast;
   }
 
-  Future<List<Cast>> searchMovies(String movie) async {
-    print('Casting');
-    var url = Uri.https(_baseUrl, '3/search/movie', 
-      {'api_key': _apiKey, 'language': _language, 'query': movie, 'page':});
+  Future<List<Movie>> getSimilarMovie(int idMovie) async {
+    var url = Uri.https(_baseUrl, '3/movie/${idMovie}/similar', 
+      {'api_key': _apiKey, 'language': _language, 'page': _page});
 
     final result = await http.get(url);
 
-    final creditsResponse = CreditsResponse.fromJson(result.body);
+    final similarResponse = SimilarResponse.fromJson(result.body);
 
-    casting[movie] = creditsResponse.cast;
+    similarMovies = similarResponse.results;
 
-    return creditsResponse.cast;
+    return similarResponse.results;
   }
+
+  Future<List<Movie>> getSearchMovies(String movie) async {
+    var url = Uri.https(_baseUrl, '3/search/movie', 
+      {'api_key': _apiKey, 'language': _language, 'query': movie, 'page': _page});
+
+    final result = await http.get(url);
+
+    final searchResponse = SearchResponse.fromJson(result.body);
+    print(searchResponse);
+
+    searchMovies = searchResponse.results;
+
+    return searchMovies;
+  }
+
+  getTopRatedMovies() async {
+    var url = Uri.https(_baseUrl, '3/movie/top_rated',
+        {'api_key': _apiKey, 'language': _language, 'page': _page});
+
+    // Await the http get response, then decode the json-formatted response.
+    final result = await http.get(url);
+
+    final topRatedResponse = TopRatedResponse.fromJson(result.body);
+
+    topRatedMovies = topRatedResponse.results;
+
+    notifyListeners();
+  }
+
+  getUpcomingMovies() async {
+    var url = Uri.https(_baseUrl, '3/movie/upcoming',
+        {'api_key': _apiKey, 'language': _language, 'page': _page});
+
+    // Await the http get response, then decode the json-formatted response.
+    final result = await http.get(url);
+
+    final upcomingResponse = UpcomingResponse.fromJson(result.body);
+
+    upcomingMovies = upcomingResponse.results;
+
+    notifyListeners();
+  }  
 
 }

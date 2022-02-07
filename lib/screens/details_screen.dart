@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:practica_final_2/models/models.dart';
+import 'package:practica_final_2/providers/movies_provider.dart';
 import 'package:practica_final_2/widgets/widgets.dart';
+import 'package:provider/provider.dart';
 
 class DetailsScreen extends StatelessWidget {
 
-  
   @override
   Widget build(BuildContext context) {
     // TODO: Canviar després per una instància de Peli
     final Movie movie = ModalRoute.of(context)?.settings.arguments as Movie;
+    final moviesProvider = Provider.of<MoviesProvider>(context);
+    final movies = moviesProvider.getSimilarMovie(movie.id);
+    final similarMovies = moviesProvider.similarMovies;
 
     return Scaffold(
         body: CustomScrollView(
@@ -18,8 +22,8 @@ class DetailsScreen extends StatelessWidget {
               delegate: SliverChildListDelegate([
                 _PosterAndTitile(movie: movie),
                 _Overview(movie: movie),
-                _Overview(movie: movie),
-                CastingCards(idMovie: movie.id)
+                CastingCards(idMovie: movie.id),
+                MovieSlider(movies: similarMovies, category: 'Similar Movies')
               ])
             )
           ],
@@ -27,6 +31,7 @@ class DetailsScreen extends StatelessWidget {
     );
   }
 }
+
 
 class _CustomAppBar extends StatelessWidget {
   final Movie movie;
@@ -88,20 +93,24 @@ class _PosterAndTitile extends StatelessWidget {
             ),
           ),
           SizedBox(width: 20,),
-          Column(
-            children: [
-              Text(movie.title, style: textTheme.headline6, overflow: TextOverflow.ellipsis, maxLines: 2, textAlign: TextAlign.center,),
-              Text(movie.originalTitle, style: textTheme.subtitle1, overflow: TextOverflow.ellipsis, maxLines: 2, textAlign: TextAlign.center),
-              Row(
-                children: [
-                  Icon(Icons.star_outline,size: 15, color: Colors.grey),
-                  SizedBox(width: 5,),
-                  Text('${movie.voteAverage}', style: textTheme.caption),
-
-                ],
-              )
-            ],
-          )
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width - 170
+            ),
+            child: Column(
+              children: [
+                Text(movie.title, style: textTheme.headline5, overflow: TextOverflow.clip, maxLines: 2, textAlign: TextAlign.center,),
+                Text(movie.originalTitle, style: textTheme.subtitle1, overflow: TextOverflow.clip, maxLines: 2, textAlign: TextAlign.center),
+                Row(
+                  children: [
+                    Icon(Icons.star_outline,size: 15, color: Colors.grey),
+                    SizedBox(width: 5,),
+                    Text('${movie.voteAverage}', style: textTheme.caption),
+                  ],
+                )
+              ],
+            ),
+          )  
         ],
       ),
     );

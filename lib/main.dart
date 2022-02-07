@@ -31,8 +31,8 @@ class MyApp extends StatelessWidget {
         'home': (BuildContext context) => HomeScreen(),
         'details': (BuildContext context) => DetailsScreen(),
       },
-      theme: ThemeData.light()
-          .copyWith(appBarTheme: AppBarTheme(color: Colors.indigo)),
+      theme: ThemeData.dark()
+          .copyWith(appBarTheme: AppBarTheme(color: Colors.black)),
     );
   }
 }

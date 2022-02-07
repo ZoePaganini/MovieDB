@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:practica_final_2/models/models.dart';
+import 'package:practica_final_2/providers/movies_provider.dart';
+import 'package:provider/provider.dart';
 
 class SearchMovies extends SearchDelegate<String> {
-  
-  final List<Movie> popularMovies;
-  final List<Movie> suggestionMovies;
+  final context;
 
-  SearchMovies(this.popularMovies, this.suggestionMovies);
+
+  SearchMovies({
+    required this.context});
   
   @override
   List<Widget>? buildActions(BuildContext context) {
@@ -23,32 +25,58 @@ class SearchMovies extends SearchDelegate<String> {
   @override
   Widget? buildLeading(BuildContext context) {
     return IconButton(
-      onPressed: () {}, 
-      icon: Icon(Icons.arrow_back)
+      onPressed: () {
+        close(context, '');
+      }, 
+      icon: AnimatedIcon(
+        icon: AnimatedIcons.menu_arrow, 
+        progress: transitionAnimation
+        )
       );
   }
 
   @override
   Widget buildResults(BuildContext context) {
-    final List<Movie> allMovies = popularMovies.where((movie) => movie.title.toLowerCase().contains(query.toLowerCase())).toList();
+    final moviesProvider = Provider.of<MoviesProvider>(this.context);
+    return FutureBuilder(
+      future: moviesProvider.getSearchMovies(query),
+      builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot ) {
+        final List<Movie> search = moviesProvider.searchMovies;
 
-    return ListView.builder(
-      itemCount: allMovies.length,
-      itemBuilder: (context, index) => ListTile(
-        title: Text(allMovies[index].title),
-      ),
+        return ListView.builder(
+            itemCount: search.length,
+            itemBuilder: (BuildContext context, int index) => ListTile(
+              title: Text(search[index].title),
+              leading: CircleAvatar(
+                backgroundImage: NetworkImage(search[index].fullPosterPath),
+              ),
+              onTap: () => Navigator.pushNamed(context, 'details', arguments: search[index]),
+            ),
+        );
+      },
     );
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final List<Movie> suggestedMovies = suggestionMovies.where((movie) => movie.title.toLowerCase().contains(query.toLowerCase())).toList();
+    final moviesProvider = Provider.of<MoviesProvider>(this.context);
+    
+    return FutureBuilder(
+      future: moviesProvider.getSearchMovies(query),
+      builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot ) {
+        final List<Movie> search = moviesProvider.searchMovies;
 
-    return ListView.builder(
-      itemCount: suggestedMovies.length,
-      itemBuilder: (context, index) => ListTile(
-        title: Text(suggestedMovies[index].title),
-      ),
+        return ListView.builder(
+            itemCount: search.length,
+            itemBuilder: (BuildContext context, int index) => ListTile(
+              title: Text(search[index].title),
+              leading: CircleAvatar(
+                backgroundImage: NetworkImage(search[index].fullPosterPath),
+              ),
+              onTap: () => Navigator.pushNamed(context, 'details', arguments: search[index]),
+            ),
+        );
+      },
     );
   }
 

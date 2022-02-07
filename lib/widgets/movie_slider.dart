@@ -3,9 +3,10 @@ import 'package:practica_final_2/models/models.dart';
 
 
 class MovieSlider extends StatelessWidget {
-  final List<Movie> popularMovies;
+  final List<Movie> movies;
+  final String category;
   
-  const MovieSlider({Key? key,required this.popularMovies}) : super(key: key);
+  const MovieSlider({Key? key,required this.movies, required this.category}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,15 +18,15 @@ class MovieSlider extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Text('Populars', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            padding: EdgeInsets.symmetric(horizontal: 30),
+            child: Text(category, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           ),
           SizedBox(height: 5,),
           Expanded(
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: popularMovies.length,
-              itemBuilder: (_, int index) => _MoviePoster(movie: popularMovies[index])
+              itemCount: movies.length,
+              itemBuilder: (_, int index) => _MoviePoster(movie: movies[index])
             ),
           )
         ],

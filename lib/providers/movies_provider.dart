@@ -3,8 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'dart:convert' as convert;
 
 import 'package:http/http.dart' as http;
+import 'package:practica_final_2/models/credits_response.dart';
 import 'package:practica_final_2/models/models.dart';
-import 'package:practica_final_2/models/popular_response.dart';
 
 class MoviesProvider extends ChangeNotifier {
   String _baseUrl = 'api.themoviedb.org';
@@ -14,6 +14,7 @@ class MoviesProvider extends ChangeNotifier {
 
   List<Movie> onDisplayMovies = [];
   List<Movie> popularMovies = [];
+  Map<int, List<Cast>> casting = {};
 
   MoviesProvider() {
     print('Movies Provider inicialitzat');
@@ -49,4 +50,33 @@ class MoviesProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  Future<List<Cast>> getMovieCast(int idMovie) async {
+    print('Casting');
+    var url = Uri.https(_baseUrl, '3/movie/${idMovie}/credits', 
+      {'api_key': _apiKey, 'language': _language});
+
+    final result = await http.get(url);
+
+    final creditsResponse = CreditsResponse.fromJson(result.body);
+
+    casting[idMovie] = creditsResponse.cast;
+
+    return creditsResponse.cast;
+  }
+
+  Future<List<Cast>> searchMovies(String movie) async {
+    print('Casting');
+    var url = Uri.https(_baseUrl, '3/search/movie', 
+      {'api_key': _apiKey, 'language': _language, 'query': movie, 'page':});
+
+    final result = await http.get(url);
+
+    final creditsResponse = CreditsResponse.fromJson(result.body);
+
+    casting[movie] = creditsResponse.cast;
+
+    return creditsResponse.cast;
+  }
+
 }

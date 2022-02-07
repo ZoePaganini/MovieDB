@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:practica_final_2/models/models.dart';
-import 'package:practica_final_2/models/popular_response.dart';
+
 
 class MovieSlider extends StatelessWidget {
   final List<Movie> popularMovies;
@@ -48,7 +48,7 @@ class _MoviePoster extends StatelessWidget {
       child: Column(
         children: [
           GestureDetector(
-            onTap: () => Navigator.pushNamed(context, 'details', arguments: 'detalls peli'),
+            onTap: () => Navigator.pushNamed(context, 'details', arguments: movie),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: FadeInImage(

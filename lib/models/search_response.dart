@@ -1,9 +1,7 @@
-import 'dart:convert';
+import 'models.dart';
 
-import 'movie.dart';
-
-class PopularMovies {
-    PopularMovies({
+class SearchResponse {
+    SearchResponse({
         required this.page,
         required this.results,
         required this.totalPages,
@@ -15,14 +13,12 @@ class PopularMovies {
     int totalPages;
     int totalResults;
 
-    factory PopularMovies.fromJson(String str) => PopularMovies.fromMap(json.decode(str));
+    factory SearchResponse.fromJson(String str) => SearchResponse.fromMap(json.decode(str));
 
-
-    factory PopularMovies.fromMap(Map<String, dynamic> json) => PopularMovies(
+    factory SearchResponse.fromMap(Map<String, dynamic> json) => SearchResponse(
         page: json["page"],
         results: List<Movie>.from(json["results"].map((x) => Movie.fromMap(x))),
         totalPages: json["total_pages"],
         totalResults: json["total_results"],
     );
-
 }

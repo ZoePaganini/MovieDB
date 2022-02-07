@@ -32,14 +32,6 @@ class NowPlayingResponse {
         totalPages: json["total_pages"],
         totalResults: json["total_results"],
       );
-
-/*   Map<String, dynamic> toMap() => {
-        "dates": dates.toMap(),
-        "page": page,
-        "results": List<dynamic>.from(results.map((x) => x.toMap())),
-        "total_pages": totalPages,
-        "total_results": totalResults,
-      }; */
 }
 
 class Dates {
@@ -52,8 +44,6 @@ class Dates {
   DateTime minimum;
 
   factory Dates.fromJson(String str) => Dates.fromMap(json.decode(str));
-
-//String toJson() => json.encode(toMap());
 
   factory Dates.fromMap(Map<String, dynamic> json) => Dates(
         maximum: DateTime.parse(json["maximum"]),

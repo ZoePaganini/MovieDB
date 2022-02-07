@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:practica_final_2/models/models.dart';
-import 'package:practica_final_2/providers/movies_provider.dart';
+import 'package:practica_final_2/widgets/similar_slider.dart';
 import 'package:practica_final_2/widgets/widgets.dart';
-import 'package:provider/provider.dart';
 
 class DetailsScreen extends StatelessWidget {
 
@@ -10,10 +9,6 @@ class DetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: Canviar després per una instància de Peli
     final Movie movie = ModalRoute.of(context)?.settings.arguments as Movie;
-    final moviesProvider = Provider.of<MoviesProvider>(context);
-    final movies = moviesProvider.getSimilarMovie(movie.id);
-    final similarMovies = moviesProvider.similarMovies;
-
     return Scaffold(
         body: CustomScrollView(
           slivers: [
@@ -23,7 +18,9 @@ class DetailsScreen extends StatelessWidget {
                 _PosterAndTitile(movie: movie),
                 _Overview(movie: movie),
                 CastingCards(idMovie: movie.id),
-                MovieSlider(movies: similarMovies, category: 'Similar Movies')
+                SimilarSlider(
+                  movieid: movie.id,
+                )
               ])
             )
           ],
@@ -31,7 +28,6 @@ class DetailsScreen extends StatelessWidget {
     );
   }
 }
-
 
 class _CustomAppBar extends StatelessWidget {
   final Movie movie;

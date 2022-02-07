@@ -17,7 +17,6 @@ class PopularMovies {
 
     factory PopularMovies.fromJson(String str) => PopularMovies.fromMap(json.decode(str));
 
-
     factory PopularMovies.fromMap(Map<String, dynamic> json) => PopularMovies(
         page: json["page"],
         results: List<Movie>.from(json["results"].map((x) => Movie.fromMap(x))),

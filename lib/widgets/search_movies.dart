@@ -4,12 +4,8 @@ import 'package:practica_final_2/providers/movies_provider.dart';
 import 'package:provider/provider.dart';
 
 class SearchMovies extends SearchDelegate<String> {
-  final context;
 
-
-  SearchMovies({
-    required this.context});
-  
+  //Build para borrar todo lo que haya escrito el usuario
   @override
   List<Widget>? buildActions(BuildContext context) {
     return [
@@ -22,6 +18,7 @@ class SearchMovies extends SearchDelegate<String> {
     ];
   }
 
+  //Build para cerrar el search 
   @override
   Widget? buildLeading(BuildContext context) {
     return IconButton(
@@ -35,9 +32,10 @@ class SearchMovies extends SearchDelegate<String> {
       );
   }
 
+  //Build para los resultados
   @override
   Widget buildResults(BuildContext context) {
-    final moviesProvider = Provider.of<MoviesProvider>(this.context);
+    final moviesProvider = Provider.of<MoviesProvider>(context);
     return FutureBuilder(
       future: moviesProvider.getSearchMovies(query),
       builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot ) {
@@ -57,9 +55,10 @@ class SearchMovies extends SearchDelegate<String> {
     );
   }
 
+  //Build para sugerencias
   @override
   Widget buildSuggestions(BuildContext context) {
-    final moviesProvider = Provider.of<MoviesProvider>(this.context);
+    final moviesProvider = Provider.of<MoviesProvider>(context);
     
     return FutureBuilder(
       future: moviesProvider.getSearchMovies(query),
@@ -67,7 +66,7 @@ class SearchMovies extends SearchDelegate<String> {
         final List<Movie> search = moviesProvider.searchMovies;
 
         return ListView.builder(
-            itemCount: search.length,
+            itemCount: 5,
             itemBuilder: (BuildContext context, int index) => ListTile(
               title: Text(search[index].title),
               leading: CircleAvatar(
